@@ -9,7 +9,7 @@ class StoreListResource(BaseResource):
     def get(self) -> tuple[dict, int]:
         if stores := StoreModel.all_to_json():
             return {"stores": stores}, 200
-        return super().response(
+        return self.response(
             message="There are no stores.",
             status_code=404)
 
@@ -29,7 +29,7 @@ class StoreResource(BaseResource):
             return self.response(
                 message="An error occured requesting the store.",
                 status_code=500)
-        return super().response(
+        return self.response(
             message=f"There is no store by the name '{name}'.",
             status_code=404)
 
@@ -41,7 +41,7 @@ class StoreResource(BaseResource):
                 status_code=400)
 
         if StoreModel.find_by_name(name):
-            return super().response(
+            return self.response(
                 message=f"A store with the name '{name}' already exists.",
                 status_code=400)
 
@@ -52,7 +52,7 @@ class StoreResource(BaseResource):
             return self.response(
                 message="An error occured creating the store.",
                 status_code=500)
-        return super().response(
+        return self.response(
             message="Store created.",
             status_code=201,
             name=store.name)
@@ -60,7 +60,6 @@ class StoreResource(BaseResource):
     @jwt_required()
     def delete(self, name) -> tuple[dict, int]:
         if not name:
-            # entity, identifier
             return self.response(
                 message="Failed to delete store, name is missing.",
                 status_code=400)
@@ -77,6 +76,6 @@ class StoreResource(BaseResource):
                 return self.response(
                     message="An error occurred deleting the store.",
                     status_code=500)
-        return super().response(
+        return self.response(
             message=f"There is no store by the name '{name}'.",
             status_code=404)

@@ -10,7 +10,7 @@ from src.management.security import authenticate, identity
 
 from resources.item import ItemResource, ItemListResource
 from resources.store import StoreResource, StoreListResource
-from resources.user import UserRegisterResource
+from resources.user import UserDeleteResource, UserRegisterResource
 
 
 app = Flask(__name__)
@@ -27,6 +27,7 @@ api.add_resource(ItemListResource, "/items")
 api.add_resource(StoreResource, "/store/<string:name>")
 api.add_resource(StoreListResource, "/stores")
 api.add_resource(UserRegisterResource, "/register")
+api.add_resource(UserDeleteResource, "/user/<string:username>")
 
 
 @app.before_first_request
