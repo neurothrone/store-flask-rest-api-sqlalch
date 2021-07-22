@@ -1,7 +1,9 @@
 from src.management.database import db
 
+from src.models.base import BaseModel
 
-class ItemModel(db.Model):
+
+class ItemModel(db.Model, BaseModel):
     __tablename__ = "items"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -16,6 +18,10 @@ class ItemModel(db.Model):
         self.price = price
         self.store_id = store_id
 
+    def update(self, new_price: float) -> None:
+        self.price = new_price
+        self.save_to_db()
+
     def to_json(self) -> dict:
         return {
             "id": self.id,
@@ -24,27 +30,16 @@ class ItemModel(db.Model):
             "store_id": self.store_id
         }
 
-    def save_to_db(self) -> None:
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self, new_price) -> None:
-        self.price = new_price
-        self.save_to_db()
-
-    def delete_from_db(self) -> None:
-        db.session.delete(self)
-        db.session.commit()
+    @classmethod
+    def all_to_json(cls) -> list[dict]:
+        return [item.to_json() for item in cls.find_all()]
 
     @classmethod
-    def find_by_name(cls, name) -> "ItemModel":
+    def find_by_name(cls, name: str) -> "ItemModel":
         return cls.query.filter_by(name=name).first()
 
     @classmethod
     def find_all(cls) -> list["ItemModel"]:
         return cls.query.all()
 
-    @classmethod
-    def all_to_json(cls) -> list[dict]:
-        # return list(map(lambda x: x.to_json(), cls.find_all()))
-        return [item.to_json() for item in cls.find_all()]
+

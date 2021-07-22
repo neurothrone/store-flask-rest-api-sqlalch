@@ -14,6 +14,7 @@ from resources.user import UserRegisterResource
 
 
 app = Flask(__name__)
+app.config["DEBUG"] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["PROPAGATE_EXCEPTIONS"] = True
@@ -35,4 +36,4 @@ def create_tables():
 
 if __name__ == "__main__":
     db.init_app(app)
-    app.run(port=5000, debug=True)
+    app.run(port=5000)

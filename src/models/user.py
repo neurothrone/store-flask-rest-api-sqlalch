@@ -1,7 +1,9 @@
 from src.management.database import db
 
+from src.models.base import BaseModel
 
-class UserModel(db.Model):
+
+class UserModel(db.Model, BaseModel):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -12,13 +14,8 @@ class UserModel(db.Model):
         self.username = username
         self.password = password
 
-    def save_to_db(self) -> None:
-        db.session.add(self)
-        db.session.commit()
-
-    def delete_from_db(self) -> None:
-        db.session.delete(self)
-        db.session.commit()
+    def to_json(self) -> dict:
+        return {"user": self.username}
 
     @classmethod
     def find_by_username(cls, username: str) -> "UserModel":
