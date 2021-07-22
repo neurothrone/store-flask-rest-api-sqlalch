@@ -17,12 +17,11 @@ class UserRegisterResource(Resource):
     def post(self) -> tuple[dict, int]:
         args = UserRegisterResource.parser.parse_args()
         if not args["username"] or not args["password"]:
-            return {"message": "failed to register, username or password is empty"}, 400
+            return {"message": "Failed to register, username or password is empty."}, 400
 
         if UserModel.find_by_username(args["username"]):
-            return {"message": "failed to register, username is taken"}, 400
+            return {"message": "Failed to register, username is taken."}, 400
 
-        # user.password = args["password"]
         user = UserModel(**args)
         user.save_to_db()
-        return {"message": "User created successfully"}, 201
+        return {"message": "User created successfully."}, 201

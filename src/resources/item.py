@@ -1,10 +1,11 @@
-from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
+from flask_restful import Resource, reqparse
 
 from src.models.item import ItemModel
 
 
 class ItemListResource(Resource):
+    @jwt_required()
     def get(self) -> tuple[dict, int]:
         if items := ItemModel.all_to_json():
             return {"items": items}, 200
@@ -42,6 +43,7 @@ class ItemResource(Resource):
             message=f"There is no item by the name '{name}'.",
             status_code=404)
 
+    @jwt_required()
     def post(self, name: str) -> tuple[dict, int]:
         if not name:
             return ItemResource.response(
@@ -71,6 +73,7 @@ class ItemResource(Resource):
                 message="An error occured creating the item.",
                 status_code=500)
 
+    @jwt_required()
     def put(self, name: str) -> tuple[dict, int]:
         if not name:
             return ItemResource.response(
@@ -105,6 +108,7 @@ class ItemResource(Resource):
                 message="An error occured creating the item.",
                 status_code=500)
 
+    @jwt_required()
     def delete(self, name: str) -> tuple[dict, int]:
         if not name:
             return ItemResource.response(

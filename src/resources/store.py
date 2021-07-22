@@ -26,7 +26,7 @@ class StoreResource(BaseResource):
             if store := StoreModel.find_by_name(name):
                 return store.to_json(), 200
         except:
-            return super().response(
+            return self.response(
                 message="An error occured requesting the store.",
                 status_code=500)
         return super().response(
@@ -36,7 +36,7 @@ class StoreResource(BaseResource):
     @jwt_required()
     def post(self, name: str) -> tuple[dict, int]:
         if not name:
-            return super().response(
+            return self.response(
                 message="Failed to create store, name is missing.",
                 status_code=400)
 
@@ -49,7 +49,7 @@ class StoreResource(BaseResource):
         try:
             store.save_to_db()
         except:
-            return super().response(
+            return self.response(
                 message="An error occured creating the store.",
                 status_code=500)
         return super().response(
@@ -61,7 +61,7 @@ class StoreResource(BaseResource):
     def delete(self, name) -> tuple[dict, int]:
         if not name:
             # entity, identifier
-            return super().response(
+            return self.response(
                 message="Failed to delete store, name is missing.",
                 status_code=400)
 
@@ -69,12 +69,12 @@ class StoreResource(BaseResource):
             try:
                 store.delete_from_db()
 
-                return super().response(
+                return self.response(
                     message="Item deleted.",
                     status_code=200,
                     name=store.name)
             except:
-                return super().response(
+                return self.response(
                     message="An error occurred deleting the store.",
                     status_code=500)
         return super().response(

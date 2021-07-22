@@ -13,7 +13,11 @@ class StoreModel(db.Model):
         self.name = name
 
     def to_json(self) -> dict:
-        return {"name": self.name, "items": [item.to_json() for item in self.items.all()]}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "items": [item.to_json() for item in self.items.all()]
+        }
 
     def save_to_db(self) -> None:
         db.session.add(self)
