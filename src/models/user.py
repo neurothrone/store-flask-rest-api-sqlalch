@@ -15,12 +15,15 @@ class UserModel(db.Model, BaseModel):
         self.password = password
 
     def to_json(self) -> dict:
-        return {"user": self.username}
+        return {
+            "id": self.id,
+            "user": self.username
+        }
 
     @classmethod
     def find_by_username(cls, username: str) -> "UserModel":
         return cls.query.filter_by(username=username).first()
 
     @classmethod
-    def find_by_id(cls, _id: str) -> "UserModel":
+    def find_by_id(cls, _id: int) -> "UserModel":
         return cls.query.filter_by(id=_id).first()

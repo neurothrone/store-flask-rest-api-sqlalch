@@ -1,4 +1,3 @@
-from flask_jwt import jwt_required
 from flask_restful import reqparse
 
 from src.models.user import UserModel
@@ -29,32 +28,40 @@ class UserRegisterResource(BaseResource):
         return {"message": "User created successfully."}, 201
 
 
-class UserDeleteResource(BaseResource):
+class UserResource(BaseResource):
     parser = reqparse.RequestParser()
-    parser.add_argument("username",
+    parser.add_argument("user_id",
                         type=str,
                         required=True,
-                        help="Username field cannot be blank")
+                        help="User id field cannot be blank")
 
-    @jwt_required()
-    def delete(self, username: str) -> tuple[dict, int]:
-        if not username:
-            return self.response(
-                message="Failed to delete user, username field is missing.",
-                status_code=400)
+    @classmethod
+    def get(cls, user_id: int) -> tuple[dict, int]:
+        try:
+            if user := UserModel.find_by_id(user_id):
+                return user.to_json(), 200
+        except:
+            return cls.response(
+                message="An error occured requesting the user.",
+                status_code=500)
+        return cls.response(
+            message=f"There is no user with the user id '{user_id}'.",
+            status_code=404)
 
-        if user := UserModel.find_by_username(username):
+    @classmethod
+    def delete(cls, user_id: int) -> tuple[dict, int]:
+        if user := UserModel.find_by_id(user_id):
             try:
                 user.delete_from_db()
 
-                return self.response(
+                return cls.response(
                     message="User deleted.",
                     status_code=200,
                     name=user.username)
             except:
-                return self.response(
+                return cls.response(
                     message="An error occurred deleting the user.",
                     status_code=500)
-        return self.response(
-            message=f"There is no user by the username '{username}'.",
+        return cls.response(
+            message=f"There is no user with the user id '{user_id}'.",
             status_code=404)

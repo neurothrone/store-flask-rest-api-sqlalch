@@ -30,7 +30,7 @@ class ItemResource(BaseResource):
     def get(self, name: str) -> tuple[dict, int]:
         if not name:
             return self.response(
-                message="Failed to create item, name is missing.",
+                message="Failed to retrieve item, name is missing.",
                 status_code=400)
 
         try:

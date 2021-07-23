@@ -6,3 +6,6 @@ venv/
 
 # pycache directories
 **/__pycache__/
+
+# database
+data/data.db
