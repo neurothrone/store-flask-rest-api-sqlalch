@@ -1,4 +1,4 @@
-from flask_jwt import jwt_required
+from flask_jwt_extended import jwt_required
 
 from src.models.store import StoreModel
 from src.resources.base import BaseResource

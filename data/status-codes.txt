@@ -2,5 +2,6 @@
 200: successfully returned data
 201: successfully created item
 400: bad request
+401: unauthorized client error
 404: not found
 500: internal server error

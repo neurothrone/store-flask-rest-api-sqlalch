@@ -1,14 +1,13 @@
 import os
 
 from flask import Flask
-from flask_jwt import JWT
+from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
 from resources.item import ItemResource, ItemListResource
 from resources.store import StoreResource, StoreListResource
-from resources.user import UserResource, UserRegisterResource
+from resources.user import UserResource, UserLoginResource, UserRegisterResource
 from src.management.database import db
-from src.management.security import authenticate, identity
 
 
 DATABASE_PATH = "../data/data.db"
@@ -20,13 +19,14 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["PROPAGATE_EXCEPTIONS"] = True
 app.secret_key = os.urandom(24)
 api = Api(app)
-jwt = JWT(app, authenticate, identity)  # creates new endpoint: /auth
+jwt = JWTManager(app)
 
 api.add_resource(ItemResource, "/item/<string:name>")
 api.add_resource(ItemListResource, "/items")
 api.add_resource(StoreResource, "/store/<string:name>")
 api.add_resource(StoreListResource, "/stores")
 api.add_resource(UserResource, "/user/<int:user_id>")
+api.add_resource(UserLoginResource, "/login")
 api.add_resource(UserRegisterResource, "/register")
 
 

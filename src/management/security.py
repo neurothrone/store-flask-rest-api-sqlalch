@@ -1,11 +1,13 @@
+from werkzeug.security import safe_str_cmp
+
 from src.models.user import UserModel
 
 
 def authenticate(username: str, password: str) -> UserModel or None:
-    user = UserModel.find_by_username(username)
-    if user and user.password == password:
-        return user
-    return None
+    if (user := UserModel.find_by_username(username)) is None or \
+            not safe_str_cmp(user.password, password):
+        return None
+    return user
 
 
 def identity(payload) -> UserModel or None:
